@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ update destroy ]
+  skip_before_action :authorize, only: [:create]
   wrap_parameters format: []
   # GET /users
   def index
