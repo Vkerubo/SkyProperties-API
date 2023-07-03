@@ -3,9 +3,8 @@ class PropertiesController < ApplicationController
 
   # GET /properties
   def index
-    @properties = Property.all
-
-    render json: @properties
+    properties = Property.all
+    render json: properties
   end
 
   # GET /properties/1
@@ -15,12 +14,12 @@ class PropertiesController < ApplicationController
 
   # POST /properties
   def create
-    @property = Property.new(property_params)
+    property = Property.create!(property_params)
 
-    if @property.save
-      render json: @property, status: :created, location: @property
+    if property
+      render json: property, status: :created
     else
-      render json: @property.errors, status: :unprocessable_entity
+      render json: property.errors, status: :unprocessable_entity
     end
   end
 
