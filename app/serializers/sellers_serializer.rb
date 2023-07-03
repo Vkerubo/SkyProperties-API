@@ -1,3 +1,4 @@
 class SellersSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :name, :email, :phone
+  has_many :properties
 end
