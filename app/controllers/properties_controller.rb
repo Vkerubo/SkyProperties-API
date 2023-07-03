@@ -1,5 +1,5 @@
 class PropertiesController < ApplicationController
-  before_action :set_property, only: %i[ show update destroy ]
+  before_action :set_property, only: [:show,  :update, :destroy]
 
   # GET /properties
   def index
