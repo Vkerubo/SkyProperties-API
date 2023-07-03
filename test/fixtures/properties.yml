@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  address: MyString
+  price: 1
+  image: MyString
+  bedrooms: 1
+  bathrooms: 1
+  seller: one
+
+two:
+  title: MyString
+  address: MyString
+  price: 1
+  image: MyString
+  bedrooms: 1
+  bathrooms: 1
+  seller: two
