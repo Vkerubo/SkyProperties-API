@@ -3,8 +3,12 @@ class PropertiesController < ApplicationController
 
   # GET /properties
   def index
-    properties = Property.all
-    render json: properties
+    if params[:seller_id]
+      properties = Seller.find(params[:seller_id]).properties
+    else
+      properties = Property.all
+    end
+    render json: @property, include: [:buyers]
   end
 
   # GET /properties/1
