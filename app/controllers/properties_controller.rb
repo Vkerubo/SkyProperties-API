@@ -1,5 +1,6 @@
 class PropertiesController < ApplicationController
   before_action :set_property, only: [:show,  :update, :destroy]
+rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # GET /properties, & GET/seller_id/properties
   def index
@@ -39,6 +40,7 @@ class PropertiesController < ApplicationController
   # DELETE /properties/1
   def destroy
     @property.destroy
+    head :no_content
   end
 
   private
@@ -50,5 +52,9 @@ class PropertiesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def property_params
       params.require(:property).permit(:title, :address, :price, :image, :bedrooms, :bathrooms, :seller_id)
+    end
+
+    def record_not_found
+      render json: { error: 'Record not found' }, status: 404
     end
 end
