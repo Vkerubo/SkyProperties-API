@@ -1,28 +1,46 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show update destroy ]
-
+  before_action :set_user, only: %i[ update destroy ]
+  skip_before_action :authorize, only: [:create]
+  wrap_parameters format: []
   # GET /users
   def index
     @users = User.all
-
     render json: @users
   end
 
   # GET /users/1
   def show
-    render json: @user
-  end
+    user = User.find_by(id: session[:user_id])
+    if user
+        render json: user
+    else
+        render json:{error: "Not authorized"}, status: :unauthorized
+    end
+end
 
   # POST /users
   def create
-    @user = User.new(user_params)
-
-    if @user.save
-      render json: @user, status: :created, location: @user
+    user = User.create(user_params)
+    name = user.username
+  
+    if user.valid?
+      if user.role.downcase == 'buyer'
+        buyer = Buyer.create(name: name, email: user.email, phone: user.phone)
+        render json: buyer, status: :created
+      elsif user.role.downcase == 'seller'
+        seller = Seller.create(name: name, email: user.email, phone: user.phone)
+        render json: seller, status: :created
+      else
+        render json: { error: 'Invalid role' }, status: :unprocessable_entity
+      end
+  
+      session[:user_id] = user.id
+      render json: user, status: :created, location: user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_entity
     end
   end
+  
 
   # PATCH/PUT /users/1
   def update
@@ -46,6 +64,7 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:username, :email, :phone, :password_digest, :role)
+      params.require(:user).permit(:username, :email, :phone, :password, :role)
     end
 end
+
