@@ -2,9 +2,11 @@ class FavoritesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound,  with: :render_not_found
   wrap_parameters format: []
   # GET /favorites
-  def index
-    favorites = Favorite.all
-    render json: favorites
+  def index 
+   user = User.find_by(id: session[:user_id])
+   buyer = Buyer.find_by(id: user&.buyer_id)
+   favorites = Favorite.where(buyer_id: buyer&.id)
+   render json: favorites
   end
 
   def show
