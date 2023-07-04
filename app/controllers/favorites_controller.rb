@@ -6,7 +6,11 @@ class FavoritesController < ApplicationController
    user = User.find_by(id: session[:user_id])
    buyer = Buyer.find_by(id: user&.buyer_id)
    favorites = Favorite.where(buyer_id: buyer&.id)
-   render json: favorites
+   if favorites.present?
+    render json: favorites
+    else
+     render json: {error: "Favorites not found"}
+    end
   end
 
   def show
