@@ -52,4 +52,8 @@ class PropertiesController < ApplicationController
     def property_params
       params.require(:property).permit(:title, :address, :price, :image, :bedrooms, :bathrooms, :seller_id)
     end
+
+    def record_not_found
+      render json: { error: 'Record not found' }, status: 404
+    end
 end
