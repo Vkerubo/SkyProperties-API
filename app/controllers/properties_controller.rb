@@ -1,10 +1,14 @@
 class PropertiesController < ApplicationController
-  before_action :set_property, only: %i[ show update destroy ]
+  before_action :set_property, only: [:show,  :update, :destroy]
 
-  # GET /properties
+  # GET /properties, & GET/seller_id/properties
   def index
-    properties = Property.all
-    render json: properties
+    if params[:seller_id]
+      properties = Seller.find(params[:seller_id]).properties
+    else
+      properties = Property.all
+    end
+    render json: properties, include: [:buyers]
   end
 
   # GET /properties/1
