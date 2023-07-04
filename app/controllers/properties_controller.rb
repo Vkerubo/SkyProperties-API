@@ -39,6 +39,7 @@ class PropertiesController < ApplicationController
   # DELETE /properties/1
   def destroy
     @property.destroy
+    head :no_content
   end
 
   private
