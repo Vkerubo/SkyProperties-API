@@ -55,6 +55,6 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
     end
 
     def record_not_found
-      render json: { error: 'Record not found' }, status: 404
+      render json: { error: 'Property not found' }, status: 404
     end
 end
