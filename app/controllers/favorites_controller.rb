@@ -16,6 +16,7 @@ class FavoritesController < ApplicationController
   def create
     user = User.find_by(id: session[:user_id])
     property = Property.find(params[:id])
+    
     favorite = Favorite.create(buyer_id: user.buyer_id, property_id: property.id)
     if favorite.valid?
       render json: favorite, status: :created
