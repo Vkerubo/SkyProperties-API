@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ update destroy ]
-  skip_before_action :authorize, only: 
+  skip_before_action :authorize, only: [:create]
   wrap_parameters format: []
   # GET /users
   def index
@@ -30,15 +30,17 @@ end
         unless buyer
           buyer = Buyer.create(name: name, email: user.email, phone: user.phone)
         end
+        user.update(buyer_id: buyer.id)
         session[:user_id] = user.id
-        render json: buyer, status: :created
+        render json: user, status: :created
       elsif user.role.downcase == 'seller'
         seller = Seller.find_by(email: user.email)
         unless seller
           seller = Seller.create(name: name, email: user.email, phone: user.phone)
         end
+        user.update(seller_id: seller.id)
         session[:user_id] = user.id
-        render json: seller, status: :created
+        render json: user, status: :created
       else
         render json: { error: 'Invalid role' }, status: :unprocessable_entity
       end
@@ -71,7 +73,7 @@ end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:username, :email, :phone, :password, :role)
+      params.permit(:username, :email, :phone, :password, :role)
     end
 end
 
