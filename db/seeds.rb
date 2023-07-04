@@ -8,7 +8,7 @@ puts "start seeding"
   title = Faker::Address.street_name
   address = Faker::Address.full_address
   price = Faker::Number.number(digits: 6)
-  images = [Faker::LoremFlickr.image, Faker::LoremPixel.image]
+  images = [Faker::LoremFlickr.image, Faker::LoremFlickr.image]
   bedrooms = Faker::Number.between(from: 1, to: 5)
   bathrooms = Faker::Number.between(from: 1, to: 4)
   seller_id = Faker::Number.between(from: 1, to: 10)
