@@ -1,5 +1,7 @@
 require 'faker'
 
+puts "start seeding"
+
 # Generate 100 sample properties
 100.times do
   # Generate random data for each property
@@ -20,3 +22,5 @@ require 'faker'
   puts "Bathrooms: #{bathrooms}"
   puts "Seller ID: #{seller_id}"
 end
+
+puts "done seeding"
