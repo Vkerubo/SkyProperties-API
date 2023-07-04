@@ -1,4 +1,4 @@
-class FavoritesSerializer < ActiveModel::Serializer
+class FavoriteSerializer < ActiveModel::Serializer
   attributes :id
 
   belongs_to :buyer
