@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ update destroy ]
-  skip_before_action :authorize, only: [:create]
+  skip_before_action :authorize, only: 
   wrap_parameters format: []
   # GET /users
   def index
@@ -25,21 +25,27 @@ end
   
     if user.valid?
       if user.role.downcase == 'buyer'
-        buyer = Buyer.create(name: name, email: user.email, phone: user.phone)
+        buyer = Buyer.find_by(email: user.email)
+        unless buyer
+          buyer = Buyer.create(name: name, email: user.email, phone: user.phone)
+        end
+        session[:user_id] = user.id
         render json: buyer, status: :created
       elsif user.role.downcase == 'seller'
-        seller = Seller.create(name: name, email: user.email, phone: user.phone)
+        seller = Seller.find_by(email: user.email)
+        unless seller
+          seller = Seller.create(name: name, email: user.email, phone: user.phone)
+        end
+        session[:user_id] = user.id
         render json: seller, status: :created
       else
         render json: { error: 'Invalid role' }, status: :unprocessable_entity
       end
-  
-      session[:user_id] = user.id
-      render json: user, status: :created, location: user
     else
       render json: user.errors, status: :unprocessable_entity
     end
   end
+  
   
 
   # PATCH/PUT /users/1
