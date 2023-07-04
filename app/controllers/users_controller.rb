@@ -19,6 +19,7 @@ class UsersController < ApplicationController
 end
 
   # POST /users
+
   def create
     user = User.create(user_params)
     name = user.username
