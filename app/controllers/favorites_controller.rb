@@ -1,9 +1,15 @@
 class FavoritesController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound,  with: :render_not_found
   wrap_parameters format: []
   # GET /favorites
   def index
     favorites = Favorite.all
     render json: favorites
+  end
+
+  def show
+    favorite = Favorite.find(params[:id])
+    render json: favorite, status: :ok
   end
 
   # POST /favorites
@@ -21,12 +27,14 @@ class FavoritesController < ApplicationController
   # DELETE /favorites/1
   def destroy
     favorite = Favorite.find(params[:id])
-    if favorite
-      favorite.destroy
-      head :no_content
-    else
-      render json: {error: "Favorite not found"}, status: 404
-    end
+    favorite.destroy
+    head :no_content
+  end
+
+  private 
+
+  def render_not_found
+    render json: {error: "Favorite not Found"}, status: 404
   end
   
 end
