@@ -1,5 +1,6 @@
 class PropertiesController < ApplicationController
   before_action :set_property, only: [:show,  :update, :destroy]
+rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # GET /properties, & GET/seller_id/properties
   def index
