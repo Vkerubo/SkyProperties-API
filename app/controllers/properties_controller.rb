@@ -19,11 +19,10 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # POST /properties
   def create
-    user = User.find(session[:user_id])
-    if user.role.downcase = "seller"
-      seller_id = user.seller_id
-    property = Property.create!(property_params, seller_id: seller_id)
-    end
+    #user = User.find(session[:user_id])
+    #if user.role.downcase = "seller"
+      #seller_id = user.seller_id
+    property = Property.create!(property_params)
     if property
       render json: property, status: :created
     else
