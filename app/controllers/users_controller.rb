@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound,  with: :render_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
+
   before_action :set_user, only: %i[ update destroy ]
-  skip_before_action :authorize, only: 
+  skip_before_action :authorize, only: [:create]
   wrap_parameters format: []
+
   # GET /users
   def index
     @users = User.all
@@ -21,6 +25,12 @@ end
   # POST /users
 
   def create
+    user = User.find_by(email: user_params[:email])
+    if user
+      render json: { error: 'User already exists' }, status: :unprocessable_entity
+      return
+    end
+  
     user = User.create(user_params)
     name = user.username
   
@@ -30,15 +40,17 @@ end
         unless buyer
           buyer = Buyer.create(name: name, email: user.email, phone: user.phone)
         end
+        user.update(buyer_id: buyer.id)
         session[:user_id] = user.id
-        render json: buyer, status: :created
+        render json: user, status: :created
       elsif user.role.downcase == 'seller'
         seller = Seller.find_by(email: user.email)
         unless seller
           seller = Seller.create(name: name, email: user.email, phone: user.phone)
         end
+        user.update(seller_id: seller.id)
         session[:user_id] = user.id
-        render json: seller, status: :created
+        render json: user, status: :created
       else
         render json: { error: 'Invalid role' }, status: :unprocessable_entity
       end
@@ -46,6 +58,7 @@ end
       render json: user.errors, status: :unprocessable_entity
     end
   end
+  
   
   
 
@@ -71,7 +84,14 @@ end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:username, :email, :phone, :password, :role)
+      params.permit(:username, :email, :phone, :password, :role)
     end
-end
 
+    def render_not_found
+      render json: {error: "Power not found"}, status: 404
+  end
+
+  def render_invalid(invalid)
+      render json: {error: invalid.record.errors.full_messages}, status: :unprocessable_entity
+  end
+end
