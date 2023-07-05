@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :users
-  resources :favorites, only: [:index, :create, :destroy]
+  resources :favorites, except: [:update]
   resources :properties, only: [:index, :create, :show, :update, :destroy]
   resources :buyers
   resources :sellers, except: [:index]
