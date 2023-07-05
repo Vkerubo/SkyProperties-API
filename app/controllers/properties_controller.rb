@@ -19,8 +19,11 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # POST /properties
   def create
-    property = Property.create!(property_params)
-
+    user = User.find(session[:user_id])
+    if user.role.downcase = "seller"
+      seller_id = user.seller_id
+    property = Property.create!(property_params, seller_id: seller_id)
+    end
     if property
       render json: property, status: :created
     else
@@ -51,7 +54,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
     # Only allow a list of trusted parameters through.
     def property_params
-      params.require(:property).permit(:title, :address, :price, :image, :bedrooms, :bathrooms, :seller_id)
+      params.require(:property).permit(:title, :address, :price, :image, :bedrooms, :bathrooms)
     end
 
     def record_not_found
