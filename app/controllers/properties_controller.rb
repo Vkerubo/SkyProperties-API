@@ -9,7 +9,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
     else
       properties = Property.all
     end
-    render json: properties, include: [:buyers]
+    render json: properties
   end
 
   # GET /properties/1
