@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-    belongs_to :buyer
-    belongs_to :seller
+    belongs_to :buyer, optional: true
+    belongs_to :seller, optional: true
     has_secure_password
 
     validates :username, presence: true, uniqueness: true

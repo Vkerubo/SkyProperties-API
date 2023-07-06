@@ -9,7 +9,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
     else
       properties = Property.all
     end
-    render json: properties, include: [:buyers]
+    render json: properties
   end
 
   # GET /properties/1
@@ -19,8 +19,10 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # POST /properties
   def create
+    #user = User.find(session[:user_id])
+    #if user.role.downcase = "seller"
+      #seller_id = user.seller_id
     property = Property.create!(property_params)
-
     if property
       render json: property, status: :created
     else
