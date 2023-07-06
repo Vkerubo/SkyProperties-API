@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound,  with: :render_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
+
   before_action :set_user, only: %i[ update destroy ]
   skip_before_action :authorize, only: [:create]
   wrap_parameters format: []
+
   # GET /users
   def index
     @users = User.all
@@ -21,6 +25,12 @@ end
   # POST /users
 
   def create
+    user = User.find_by(email: user_params[:email])
+    if user
+      render json: { error: 'User already exists' }, status: :unprocessable_entity
+      return
+    end
+  
     user = User.create(user_params)
     name = user.username
   
@@ -50,6 +60,7 @@ end
   end
   
   
+  
 
   # PATCH/PUT /users/1
   def update
@@ -75,5 +86,12 @@ end
     def user_params
       params.permit(:username, :email, :phone, :password, :role)
     end
-end
 
+    def render_not_found
+      render json: {error: "Power not found"}, status: 404
+  end
+
+  def render_invalid(invalid)
+      render json: {error: invalid.record.errors.full_messages}, status: :unprocessable_entity
+  end
+end
