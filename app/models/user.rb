@@ -7,7 +7,6 @@ class User < ApplicationRecord
     validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
     validates :role, presence: true
     validates :phone, presence: true, length: {is: 10}
-    validates :password, length: {in: 6..15}
     validates :buyer_id, uniqueness: true, allow_nil: true
     validates :seller_id, uniqueness: true, allow_nil: true
 end

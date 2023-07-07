@@ -53,7 +53,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
     # Only allow a list of trusted parameters through.
     def property_params
-      params.require(:property).permit(:title, :address, :price, :image, :bedrooms, :bathrooms, :seller_id)
+      params.permit(:title, :address, :price, :image, :bedrooms, :bathrooms, :seller_id)
     end
 
     def record_not_found
