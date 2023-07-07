@@ -1,4 +1,6 @@
 require 'faker'
+require 'httparty'
+
 
 puts "start seeding"
 
@@ -25,18 +27,30 @@ Seller.delete_all
   )
 end
 
-# Create properties
+# pexels_url = 'https://api.pexels.com/v1/search?query=house'
+
+puts "Creating properties"
+pexels_api_key = "aX2JYwcpJsFx1S7COYpSDx3m1GhGEcleolbFM3QXmSnUcCswMOkg9Kil"
+
 80.times do
+  query = ['house', 'apartment', 'villa', 'cabin'].sample
+  pexels_url = "https://api.pexels.com/v1/search?query=#{query}"
+
+  response = HTTParty.get(pexels_url, headers: { 'Authorization' => pexels_api_key })
+  property_image = response['photos'].sample['src']['large']
+
   Property.create!(
-    title: Faker::Lorem.sentence,
+    title: Faker::Address.unique.building_number + ' ' + Faker::Address.street_name,
     address: Faker::Address.full_address,
     price: Faker::Number.between(from: 100000, to: 1000000),
-    image: Faker::LoremFlickr.image(size: "300x200"),
+    image: property_image,
     bedrooms: Faker::Number.between(from: 1, to: 5),
     bathrooms: Faker::Number.between(from: 1, to: 3),
     seller_id: Seller.pluck(:id).sample
   )
 end
+puts "ended creating"
+
 
 # Create buyers
 20.times do
