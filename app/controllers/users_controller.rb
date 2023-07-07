@@ -61,7 +61,7 @@ end
 
   # PATCH/PUT /users/1
   def update
-    if @user.update(username: params[:username], email: params[:email], phone: params[:phone])
+    if @user.update(user_params.except(:password, :role))
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -78,6 +78,7 @@ end
     def set_user
       @user = User.find(params[:id])
     end
+
 
     # Only allow a list of trusted parameters through.
     def user_params
