@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_07_03_110457) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "buyers", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -20,8 +23,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_110457) do
   end
 
   create_table "favorites", force: :cascade do |t|
-    t.integer "buyer_id", null: false
-    t.integer "property_id", null: false
+    t.bigint "buyer_id", null: false
+    t.bigint "property_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_favorites_on_buyer_id"
@@ -35,7 +38,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_110457) do
     t.string "image"
     t.integer "bedrooms"
     t.integer "bathrooms"
-    t.integer "seller_id", null: false
+    t.bigint "seller_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["seller_id"], name: "index_properties_on_seller_id"
